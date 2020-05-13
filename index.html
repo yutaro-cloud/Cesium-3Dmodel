@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>GSI Tiles on Cesium</title>
+<title>Tokyo 3D Tiles on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
@@ -61,6 +61,7 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
     scale : 200000.0
   }));
 */
+// 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
 var tileset = viewer.scene.primitives.add(
   new Cesium.Cesium3DTileset({
     url: Cesium.IonResource.fromAssetId(99522),
