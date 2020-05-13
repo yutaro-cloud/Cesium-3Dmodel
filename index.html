@@ -5,6 +5,7 @@
 <title>GSI Tiles on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
 <style>
   #cesiumContainer {
     position: absolute;
@@ -48,19 +49,20 @@
 
 
 // ここから3D モデルについての追記部分
+/*
   var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);
   var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
-    url : './3d/Thonker.glb',
+    url : './Thonker.glb',
     modelMatrix: modelMatrix,
     scale : 200000.0
   }));
-/*
+*/
   var tileset = viewer.scene.primitives.add(
     new Cesium.Cesium3DTileset({
       url: Cesium.IonResource.fromAssetId(99453),
     })
   );
-*/
+
 // ここまで
 
 </script>
