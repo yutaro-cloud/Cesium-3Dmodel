@@ -49,10 +49,9 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 
   
   // ここから3D モデルについての追記部分
-  var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);
-  var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
+  var tileset = viewer.scene.primitives.add(Cesium.Model.fromGltf({
     url : './Thonker.glb',
-    modelMatrix: modelMatrix,
+    modelMatrix: Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);,
     scale : 200000.0
   }));
   /*
