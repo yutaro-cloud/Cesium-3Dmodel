@@ -33,7 +33,7 @@
 <div id="cesiumContainer"></div>
 <script>
   var viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.createOpenStreetMapImageryProvider({
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider ({
       url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
       credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
     }),
@@ -49,7 +49,6 @@
 
 // ここから3D モデルについての追記部分
   var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 0.0);
-
   var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
     url : './Thonker.glb',
     modelMatrix: modelMatrix,
