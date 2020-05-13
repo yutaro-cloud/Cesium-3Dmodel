@@ -33,31 +33,7 @@
 <body>
 <div id="cesiumContainer"></div>
 <script>
-/*
-  var viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
-      url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
-      credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
-    }),
-    baseLayerPicker: false,
-    geocoder: false,
-    homeButton: false
-  });
 
-  viewer.camera.setView({
-    destination : Cesium.Cartesian3.fromDegrees(139.69, 35.68, 8000.0)
-  });
-
-
-// ここから3D モデルについての追記部分
-
-  var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);
-  var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
-    url : './Thonker.glb',
-    modelMatrix: modelMatrix,
-    scale : 200000.0
-  }));
-*/
 // Grant CesiumJS access to your ion assets
 Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
 
@@ -71,6 +47,15 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
     homeButton: false
   });
 
+  
+  // ここから3D モデルについての追記部分
+  var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);
+  var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
+    url : './Thonker.glb',
+    modelMatrix: modelMatrix,
+    scale : 200000.0
+  }));
+  /*
 var tileset = viewer.scene.primitives.add(
   new Cesium.Cesium3DTileset({
     url: Cesium.IonResource.fromAssetId(99506),
@@ -78,10 +63,11 @@ var tileset = viewer.scene.primitives.add(
     modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
       Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0)
     ),
-    scale: 200000.0,
   })
 );
-
+*/
+  
+// カメラの初期位置
 tileset.readyPromise
   .then(function () {
     viewer.zoomTo(tileset);
@@ -99,7 +85,6 @@ tileset.readyPromise
   .otherwise(function (error) {
     console.log(error);
   });
-// ここまで
 
 </script>
 </body>
