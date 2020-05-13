@@ -33,7 +33,6 @@
 <body>
 <div id="cesiumContainer"></div>
 <script>
-  Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
   var viewer = new Cesium.Viewer('cesiumContainer', {
     imageryProvider: new Cesium.OpenStreetMapImageryProvider({
       url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
@@ -57,24 +56,18 @@
     modelMatrix: modelMatrix,
     scale : 200000.0
   }));
-
-  var tileset = viewer.scene.primitives.add(
-    new Cesium.Cesium3DTileset({
-      url: Cesium.IonResource.fromAssetId(99453),
-    })
-  );
-  */
+*/
 // Grant CesiumJS access to your ion assets
-Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM';
+Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
 
 var viewer = new Cesium.Viewer("cesiumContainer");
 
 var tileset = viewer.scene.primitives.add(
   new Cesium.Cesium3DTileset({
-    url: Cesium.IonResource.fromAssetId(99453),
+    url: Cesium.IonResource.fromAssetId(99506),
     //This tileset doesn't have a location, so we're using a modelMatrix to place it at 0, 0 instead of drawing at the center of the earth
     modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
-      Cesium.Cartesian3.fromDegrees(0, 0)
+      Cesium.Cartesian3.fromDegrees(140, 0)
     ),
   })
 );
