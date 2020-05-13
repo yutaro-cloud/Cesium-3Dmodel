@@ -7,8 +7,8 @@
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 -->
-<script src="./Cesium.js"></script>
-<link href="./widgets.css" rel="stylesheet">
+<script src="./js/Cesium.js"></script>
+<link href="./css/widgets.css" rel="stylesheet">
 
 <style>
   #cesiumContainer {
@@ -55,7 +55,7 @@
 // ここから3D モデルについての追記部分
   var modelMatrix = Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0);
   var model = viewer.scene.primitives.add(Cesium.Model.fromGltf({
-    url : './Thonker.glb',
+    url : './3d/Thonker.glb',
     modelMatrix: modelMatrix,
     scale : 200000.0
   }));
