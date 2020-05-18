@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tokyo 3D Tiles on Cesium</title>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+<style>
+  #cesiumContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  html {
+    height: 100%;
+  }
+  body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+  }
+</style>
+</head>
+
+<body>
+<div id="cesiumContainer"></div>
+<script>
+
+// Cesium ionを使うためのアクセスキー
+Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
+
+  // 背景地図に国土地理院地図を利用
+  var viewer = new Cesium.Viewer('cesiumContainer', {
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+      url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
+      credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
+    }),
+    baseLayerPicker: false,
+    geocoder: false,
+    homeButton: false
+  });
+  // Cesiumデフォルトの背景地図を使いたいなら以下。
+  // var viewer = new Cesium.Viewer("cesiumContainer");
+
+/*  
+  // Cesium ionでなく、ローカルにある3D モデルを参照しようとした。Cromeは自分のファイルを
+  // 読みいけないようにセキュリティがかかっていた。対策はできるようだが、ブラウザによって
+  // 対応を変えなければならず、Cesium ionを使うしかない。
+  var tileset = viewer.scene.primitives.add(
+    new Cesium.Model.fromGltf({
+    url : './Thonker.glb',
+    modelMatrix: Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0),
+    scale : 200000.0
+  }));
+*/
+// 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
+var tileset = viewer.scene.primitives.add(
+  new Cesium.Cesium3DTileset({
+    url: Cesium.IonResource.fromAssetId(99522),
+    //This tileset doesn't have a location, so we're using a modelMatrix to place it at 0, 0 instead of drawing at the center of the earth
+    modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
+      Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
+    )    
+  })
+);
+  
+// カメラの初期位置はアイコンにしている
+tileset.readyPromise
+  .then(function () {
+    viewer.zoomTo(tileset);
+
+    // Apply the default style if it exists
+    var extras = tileset.asset.extras;
+    if (
+      Cesium.defined(extras) &&
+      Cesium.defined(extras.ion) &&
+      Cesium.defined(extras.ion.defaultStyle)
+    ) {
+      tileset.style = new Cesium.Cesium3DTileStyle(extras.ion.defaultStyle);
+    }
+  })
+  .otherwise(function (error) {
+    console.log(error);
+  });
+
+</script>
+</body>
+</html>
