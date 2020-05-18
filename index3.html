@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Sibuya GeoJson on Cesium</title>
+<script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
+<link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+
+<style>
+  #cesiumContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    font-family: sans-serif;
+  }
+  html {
+    height: 100%;
+  }
+  body {
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    height: 100%;
+  }
+</style>
+</head>
+
+<body>
+<div id="cesiumContainer"></div>
+<script>
+
+  // コールバック関数で、CesiumのViewerを作成
+  promise.then(function(datasource){
+    var viewer = new Cesium.Viewer('mapdiv', {
+      animation : false,
+      baseLayerPicker: false,
+      fullscreenButton: false,
+      geocoder: false,
+      homeButton: false,
+      navigationHelpButton: false,
+      sceneModePicker: false,
+      scene3DOnly: true,
+      timeline: false,
+      
+      // Cesiumが標準で提供する余計なユーザインタフェースを排除
+      imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+        url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
+      }),
+      
+      // 地理院タイルの色別標高図（段彩陰影図）を指定
+      terrainProvider: new Cesium.JapanGSITerrainProvider({
+        heightPower: 1.0  // heightPowerの値を大きくすると起伏を強調できる
+      })
+    });
+
+    // 色別標高図の上に、透過度を指定してOpenStreetMapを重ねます。陰影が透けるため、立体感のある地図になります。
+    var layers = viewer.scene.imageryLayers;
+    var osm = layers.addImageryProvider(
+      new Cesium.OpenStreetMapImageryProvider()
+    );
+    osm.alpha = 0.6;
+    
+    // 作ったdatasourceを加える
+    viewer.dataSources.add(datasource);
+    
+    // カメラの初期位置を指定する。
+    viewer.zoomTo(datasource);
+  });
+
+</script>
+</body>
+</html>
