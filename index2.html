@@ -57,15 +57,11 @@
     )
   );
   
-  // カメラの初期位置はアイコンにしている
-  tileset.readyPromise.then(function () {
-    viewer.zoomTo(tileset);
-
-    // Apply the default style if it exists
-    var extras = tileset.asset.extras;
-  })
-  .otherwise(function (error) {
-    console.log(error);
+  // カメラの初期位置を指定する。
+  var firstPoint = viewer.camera.flyTo({
+    destination: Cesium.Cartesian3.fromDegrees(
+      139.701636, 35.658034, 1000
+    )
   });
 
 </script>
