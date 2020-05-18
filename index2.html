@@ -34,9 +34,6 @@
 <div id="cesiumContainer"></div>
 <script>
 
-// Cesium ionを使うためのアクセスキー
-Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
-
   // 背景地図に国土地理院地図を利用
   var viewer = new Cesium.Viewer('cesiumContainer', {
     imageryProvider: new Cesium.OpenStreetMapImageryProvider({
@@ -50,42 +47,22 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
   // Cesiumデフォルトの背景地図を使いたいなら以下。
   // var viewer = new Cesium.Viewer("cesiumContainer");
 
-/*  
-  // Cesium ionでなく、ローカルにある3D モデルを参照しようとした。Cromeは自分のファイルを
-  // 読みいけないようにセキュリティがかかっていた。対策はできるようだが、ブラウザによって
-  // 対応を変えなければならず、Cesium ionを使うしかない。
-  var tileset = viewer.scene.primitives.add(
-    new Cesium.Model.fromGltf({
-    url : './Thonker.glb',
-    modelMatrix: Cesium.Cartesian3.fromDegrees(139.69, 35.68, 20.0),
-    scale : 200000.0
-  }));
-*/
-// 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
-var tileset = viewer.scene.primitives.add(
-  new Cesium.Cesium3DTileset({
-    url: Cesium.IonResource.fromAssetId(99522),
-    //This tileset doesn't have a location, so we're using a modelMatrix to place it at 0, 0 instead of drawing at the center of the earth
-    modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
-      Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
-    )    
-  })
-);
+  var tileset = viewer.dataSources.add(
+    Cesium.GeoJsonDataSource.load(
+      './link.geojson',{
+        stroke: Cesium.Color.BLACK,  // 外形線の色を指定
+        fill: Cesium.Color.YELLOW.withAlpha(0.5),  // 塗りの色を指定
+        strokeWidth: 5  // 外形線の幅を指定
+      }
+    )
+  );
   
-// カメラの初期位置はアイコンにしている
-tileset.readyPromise
-  .then(function () {
+  // カメラの初期位置はアイコンにしている
+  tileset.readyPromise.then(function () {
     viewer.zoomTo(tileset);
 
     // Apply the default style if it exists
     var extras = tileset.asset.extras;
-    if (
-      Cesium.defined(extras) &&
-      Cesium.defined(extras.ion) &&
-      Cesium.defined(extras.ion.defaultStyle)
-    ) {
-      tileset.style = new Cesium.Cesium3DTileStyle(extras.ion.defaultStyle);
-    }
   })
   .otherwise(function (error) {
     console.log(error);
