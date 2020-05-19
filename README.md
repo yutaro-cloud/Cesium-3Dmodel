@@ -9,12 +9,6 @@
   ●index2.html<br>
   Cesium上でGeoJsonファイルを公開するためのサンプルです。
   https://yutaro-cloud.github.io/Cesium-3Dmodel/index2.html
-</div><br>
-
-<div>
-  ●index3.html<br>
-  Cesium上で標高図を公開するためのサンプルです。
-  https://yutaro-cloud.github.io/Cesium-3Dmodel/index3.html
 </div><br><br>
 
 <div>以降は参考情報<div>
