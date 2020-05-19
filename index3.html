@@ -35,7 +35,6 @@
 <script>
 
   // コールバック関数で、CesiumのViewerを作成
-  promise.then(function(datasource){
     var viewer = new Cesium.Viewer('cesiumContainer', {
       animation : false,
       baseLayerPicker: false,
@@ -65,12 +64,8 @@
     );
     osm.alpha = 0.6;
     
-    // 作ったdatasourceを加える
-    viewer.dataSources.add(datasource);
-    
     // カメラの初期位置を指定する。
     viewer.zoomTo(datasource);
-  });
 
 </script>
 </body>
