@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Sibuya GeoJson on Cesium</title>
+<title>3Dmap on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
@@ -36,7 +36,7 @@
 
   // コールバック関数で、CesiumのViewerを作成
   promise.then(function(datasource){
-    var viewer = new Cesium.Viewer('mapdiv', {
+    var viewer = new Cesium.Viewer('cesiumContainer', {
       animation : false,
       baseLayerPicker: false,
       fullscreenButton: false,
