@@ -16,7 +16,7 @@ var
     "use strict";
 
     var trailingSlashRegex = /\/$/;
-    var defaultCredit = new Credit('国土地�?��');
+    var defaultCredit = new Credit('国土地理院');
     var GSI_MAX_TERRAIN_LEVEL = 14;
 
     var JapanGSITerrainProvider = function JapanGSITerrainProvider(options) {
