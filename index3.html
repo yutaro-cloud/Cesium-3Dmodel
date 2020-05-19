@@ -34,54 +34,7 @@
 <div id="cesiumContainer"></div>
 <script>
 
-  var viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.JapanGSIImageryProvider({
-      layerLists: ["ort","relief","std"]
-    }),
-    terrainProvider: new Cesium.JapanGSITerrainProvider({}),
-    baseLayerPicker: false,
-    mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84)
-  });
-var scene = viewer.scene;
-scene.globe.depthTestAgainstTerrain = true;
-  /*
-  // コールバック関数で、CesiumのViewerを作成
-  var viewer = new Cesium.Viewer('cesiumContainer', {
-    animation : false,
-    baseLayerPicker: false,
-    fullscreenButton: false,
-    geocoder: false,
-    homeButton: false,
-    navigationHelpButton: false,
-    sceneModePicker: false,
-    scene3DOnly: true,
-    timeline: false,
-    
-    // Cesiumが標準で提供する余計なユーザインタフェースを排除
-    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
-      url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
-    }),
-    
-    // 地理院タイルの色別標高図（段彩陰影図）を指定 // heightPowerの値を大きくすると起伏を強調できる
-    terrainProvider: new Cesium.JapanGSITerrainProvider({
-      heightPower: 1.0
-    })
-  });
-
-  // 色別標高図の上に、透過度を指定してOpenStreetMapを重ねます。陰影が透けるため、立体感のある地図になります。
-  var layers = viewer.scene.imageryLayers;
-  var osm = layers.addImageryProvider(
-    new Cesium.OpenStreetMapImageryProvider()
-  );
-  osm.alpha = 0.6;
   
-  // カメラの初期位置を指定する。
-  viewer.zoomTo(datasource);
-*/
-  
-  
-  
-  //**
 (function(){
     var
         Credit = Cesium.Credit,
@@ -409,6 +362,54 @@ scene.globe.depthTestAgainstTerrain = true;
     Cesium.JapanGSIImageryProvider = JapanGSIImageryProvider;
 })();
   
+  
+  
+  
+  var viewer = new Cesium.Viewer('cesiumContainer', {
+    imageryProvider: new Cesium.JapanGSIImageryProvider({
+      layerLists: ["ort","relief","std"]
+    }),
+    terrainProvider: new Cesium.JapanGSITerrainProvider({}),
+    baseLayerPicker: false,
+    mapProjection: new Cesium.WebMercatorProjection(Cesium.Ellipsoid.WGS84)
+  });
+var scene = viewer.scene;
+scene.globe.depthTestAgainstTerrain = true;
+  /*
+  // コールバック関数で、CesiumのViewerを作成
+  var viewer = new Cesium.Viewer('cesiumContainer', {
+    animation : false,
+    baseLayerPicker: false,
+    fullscreenButton: false,
+    geocoder: false,
+    homeButton: false,
+    navigationHelpButton: false,
+    sceneModePicker: false,
+    scene3DOnly: true,
+    timeline: false,
+    
+    // Cesiumが標準で提供する余計なユーザインタフェースを排除
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+      url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
+    }),
+    
+    // 地理院タイルの色別標高図（段彩陰影図）を指定 // heightPowerの値を大きくすると起伏を強調できる
+    terrainProvider: new Cesium.JapanGSITerrainProvider({
+      heightPower: 1.0
+    })
+  });
+
+  // 色別標高図の上に、透過度を指定してOpenStreetMapを重ねます。陰影が透けるため、立体感のある地図になります。
+  var layers = viewer.scene.imageryLayers;
+  var osm = layers.addImageryProvider(
+    new Cesium.OpenStreetMapImageryProvider()
+  );
+  osm.alpha = 0.6;
+  
+  // カメラの初期位置を指定する。
+  viewer.zoomTo(datasource);
+*/
+
 </script>
 </body>
 </html>
