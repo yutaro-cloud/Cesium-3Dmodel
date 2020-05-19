@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>a3Dmap on Cesium</title>
+<title>b3Dmap on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
@@ -51,9 +51,9 @@
       url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
     }),
     
-    // 地理院タイルの色別標高図（段彩陰影図）を指定
+    // 地理院タイルの色別標高図（段彩陰影図）を指定 // heightPowerの値を大きくすると起伏を強調できる
     terrainProvider: new Cesium.JapanGSITerrainProvider({
-      heightPower: 1.0  // heightPowerの値を大きくすると起伏を強調できる
+      heightPower: 1.0
     })
   });
 
