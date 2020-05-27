@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>3Tokyo 3D Tiles on Cesium</title>
+<title>4Tokyo 3D Tiles on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
@@ -37,22 +37,21 @@
 // Cesium ionを使うためのアクセスキー
 Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
 
-  
+/*  
   // 背景地図に国土地理院地図を利用
   var viewer = new Cesium.Viewer('cesiumContainer', {
     imageryProvider: new Cesium.OpenStreetMapImageryProvider({
-      //url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
-      url: 'https://cyberjapandata.gsi.go.jp/xyz/dem/',
+      url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
       credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
     }),
     baseLayerPicker: false,
     geocoder: false,
     homeButton: false
   });
-/*
+*/
   // Cesiumデフォルトの背景地図を使いたいなら以下。
   var viewer = new Cesium.Viewer("cesiumContainer");
-*/
+
 /*  
   // Cesium ionでなく、ローカルにある3D モデルを参照しようとした。Cromeは自分のファイルを
   // 読みいけないようにセキュリティがかかっていた。対策はできるようだが、ブラウザによって
