@@ -1,85 +1,235 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>3Tokyo 3D Tiles on Cesium</title>
-<script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
-<link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+  <head>
+    <meta charset="utf-8">
+    <title>標高タイル on Cesium</title>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
+    
+    <!-- hakone.css -->
+    <style>
+      html, body {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+      }
+      #mapdiv {
+        position: relative;
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    
+    <!-- JapanGSITerrainProvider.js -->
+    <script>
+      //**
+(function(){
+var
+    defaultValue = Cesium.defaultValue,
+    defined = Cesium.defined,
+    defineProperties = Cesium.defineProperties,
+    loadText = Cesium.loadText,
+    throttleRequestByServer = Cesium.throttleRequestByServer,
+    Event = Cesium.Event,
+    Credit = Cesium.Credit,
+    WebMercatorTilingScheme = Cesium.WebMercatorTilingScheme,
+    HeightmapTerrainData = Cesium.HeightmapTerrainData,
+    TerrainProvider = Cesium.TerrainProvider,
+    when = Cesium.when;
+/**/
+    "use strict";
 
-<style>
-  #cesiumContainer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    overflow: hidden;
-    padding: 0;
-    font-family: sans-serif;
-  }
-  html {
-    height: 100%;
-  }
-  body {
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-    height: 100%;
-  }
-</style>
-</head>
+    var trailingSlashRegex = /\/$/;
+    var defaultCredit = new Credit('国土地理院');
+    var GSI_MAX_TERRAIN_LEVEL = 14;
 
-<body>
-<div id="cesiumContainer"></div>
-<script>
+    var JapanGSITerrainProvider = function JapanGSITerrainProvider(options) {
+        options = defaultValue(options, {});
 
-// Cesium ionを使うためのアクセスキー
-Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
+        var url = defaultValue(options.url, '//cyberjapandata.gsi.go.jp/xyz/dem/');
 
-  // 背景地図に国土地理院地図を利用
-  var viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
-      url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
-      credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
-    }),
+        if (!trailingSlashRegex.test(url)) {
+            url = url + '/';
+        }
+
+        this._url = url;
+        this._proxy = options.proxy;
+        this._heightPower = defaultValue(options.heightPower , 1);
+
+        this._tilingScheme = new WebMercatorTilingScheme({numberOfLevelZeroTilesX:2});
+
+        this._heightmapWidth = 32;
+        this._demDataWidth   = 256;
+
+        this._terrainDataStructure = {
+            heightScale:       1,
+            heightOffset:      0,
+            elementsPerHeight: 1,
+            stride:            1,
+            elementMultiplier: 256
+        };
+
+        this._levelZeroMaximumGeometricError = TerrainProvider.getEstimatedLevelZeroGeometricErrorForAHeightmap(this._tilingScheme.ellipsoid, this._heightmapWidth, this._tilingScheme.getNumberOfXTilesAtLevel(0));
+
+        this._errorEvent = new Event();
+
+        var credit = defaultValue(options.credit, defaultCredit);
+        if (typeof credit === 'string') {
+            credit = new Credit(credit);
+        }
+        this._credit = credit;
+    };
+
+    JapanGSITerrainProvider.prototype.requestTileGeometry = function(x, y, level, throttleRequests) {
+        var orgx = x;
+        var orgy = y;
+        var shift = 0;
+        if (level > GSI_MAX_TERRAIN_LEVEL) {
+            shift = level - GSI_MAX_TERRAIN_LEVEL;
+            level = GSI_MAX_TERRAIN_LEVEL;
+        }
+
+        x >>= shift+1;
+        y >>= shift;
+        var shiftx = (orgx % Math.pow(2, shift + 1)) / Math.pow(2, shift + 1);
+        var shifty = (orgy % Math.pow(2, shift)) / Math.pow(2, shift);
+
+        var url = this._url + level + '/' + x + '/' + y + '.txt';
+
+        var proxy = this._proxy;
+        if (defined(proxy)) {
+            url = proxy.getURL(url);
+        }
+
+        var promise;
+
+        throttleRequests = defaultValue(throttleRequests, true);
+        if (throttleRequests) {
+            promise = throttleRequestByServer(url, loadText);
+            if (!defined(promise)) {
+                return undefined;
+            }
+        } else {
+            promise = loadText(url);
+        }
+
+        var self = this;
+        return when(promise, function(data) {
+            var heightCSV = [];
+            var LF = String.fromCharCode(10);
+            var lines = data.split(LF);
+            for (var i=0; i<lines.length; i++){
+                var heights = lines[i].split(",");
+                for (var j=0; j<heights.length; j++){
+                    if (heights[j] == "e") heights[j] = 0;
+                }
+                heightCSV[i] = heights;
+            }
+
+            var whm = self._heightmapWidth;
+            var wim = self._demDataWidth;
+            var hmp = new Int16Array(whm*whm);
+
+            for(var y = 0; y < whm; ++y){
+                for(var x = 0; x < whm; ++x){
+                    var py = Math.round( ( y / Math.pow(2, shift) / ( whm - 1 ) + shifty ) * ( wim - 1 ) );
+                    var px = Math.round( ( x / Math.pow(2, shift + 1) / ( whm - 1 ) + shiftx ) * ( wim - 1 ) );
+
+                    hmp[y*whm + x] = Math.round(heightCSV[py][px] * self._heightPower);
+                }
+            }
+
+            return new HeightmapTerrainData({
+                buffer:        hmp,
+                width:         self._heightmapWidth,
+                height:        self._heightmapWidth,
+                structure:     self._terrainDataStructure,
+                childTileMask: GSI_MAX_TERRAIN_LEVEL
+            });
+        });
+    };
+
+    JapanGSITerrainProvider.prototype.getLevelMaximumGeometricError = function(level) {
+        return this._levelZeroMaximumGeometricError / (1 << level);
+    };
+    JapanGSITerrainProvider.prototype.hasWaterMask = function() {
+        return !true;
+    };
+    JapanGSITerrainProvider.prototype.getTileDataAvailable = function(x, y, level) {
+        return true;
+    };
+
+    defineProperties(JapanGSITerrainProvider.prototype, {
+        errorEvent : {
+            get : function() {
+                return this._errorEvent;
+            }
+        },
+
+        credit : {
+            get : function() {
+                return this._credit;
+            }
+        },
+
+        tilingScheme : {
+            get : function() {
+                return this._tilingScheme;
+            }
+        },
+
+        ready : {
+            get : function() {
+                return true;
+            }
+        }
+    });
+
+    Cesium.JapanGSITerrainProvider = JapanGSITerrainProvider;
+})();
+    </script>
+   
+    
+    <!-- hakone.js -->
+    <script>
+      var hakone = 'https://midoriit.com/hakone/data/hakone_shelter.geojson';
+
+var promise = Cesium.GeoJsonDataSource.load(hakone);
+
+promise.then(function(datasource){
+  var viewer = new Cesium.Viewer('mapdiv', {
+    animation : false,
     baseLayerPicker: false,
+    fullscreenButton: false,
     geocoder: false,
-    homeButton: false
-  });
-  // Cesiumデフォルトの背景地図を使いたいなら以下。
-  // var viewer = new Cesium.Viewer("cesiumContainer");
-
-// 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
-var tileset = viewer.scene.primitives.add(
-  new Cesium.Cesium3DTileset({
-    url: Cesium.IonResource.fromAssetId(99522)//,
-    //This tileset doesn't have a location, so we're using a modelMatrix to place it at 0, 0 instead of drawing at the center of the earth
-    //modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
-    //  Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
-    //) 
-  })
-);
-  
-// カメラの初期位置はアイコンにしている
-tileset.readyPromise
-  .then(function () {
-    viewer.zoomTo(tileset);
-
-    // Apply the default style if it exists
-    var extras = tileset.asset.extras;
-    if (
-      Cesium.defined(extras) &&
-      Cesium.defined(extras.ion) &&
-      Cesium.defined(extras.ion.defaultStyle)
-    ) {
-      tileset.style = new Cesium.Cesium3DTileStyle(extras.ion.defaultStyle);
-    }
-  })
-  .otherwise(function (error) {
-    console.log(error);
+    homeButton: false,
+    navigationHelpButton: false,
+    sceneModePicker: false,
+    scene3DOnly: true,
+    timeline: false,
+    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+      url: '//cyberjapandata.gsi.go.jp/xyz/relief/'
+    }),
+    terrainProvider: new Cesium.JapanGSITerrainProvider({
+      heightPower: 1.0
+    })
   });
 
-</script>
-</body>
+  var layers = viewer.scene.imageryLayers;
+  var osm = layers.addImageryProvider(
+    new Cesium.OpenStreetMapImageryProvider()
+  );
+  osm.alpha = 0.6;
+
+  viewer.dataSources.add(datasource);
+  viewer.zoomTo(datasource);
+});
+    </script>
+    
+  </head>
+  <body>
+    <div id="mapdiv"></div>
+  </body>
 </html>
