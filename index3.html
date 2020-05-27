@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>3標高タイル on Cesium</title>
+    <title>4標高タイル on Cesium</title>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
     
@@ -106,6 +106,10 @@ var
 
         var promise;
 
+        console.log("aaaa");
+        console.log(url);
+        console.log(loadText);
+        console.log("bbbb");
         throttleRequests = defaultValue(throttleRequests, true);
         if (throttleRequests) {
             promise = throttleRequestByServer(url, loadText);
