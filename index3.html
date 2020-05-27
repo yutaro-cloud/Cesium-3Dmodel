@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>2Tokyo 3D Tiles on Cesium</title>
+<title>3Tokyo 3D Tiles on Cesium</title>
 <script src="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Cesium.js"></script>
 <link href="https://cesium.com/downloads/cesiumjs/releases/1.63.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
 
@@ -53,9 +53,8 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 // 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
 var tileset = viewer.scene.primitives.add(
   new Cesium.Cesium3DTileset({
-    url: Cesium.IonResource.fromAssetId(99522),
+    url: Cesium.IonResource.fromAssetId(99522)//,
     //This tileset doesn't have a location, so we're using a modelMatrix to place it at 0, 0 instead of drawing at the center of the earth
-    modelMatrix: Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
     //modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
     //  Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
     //) 
