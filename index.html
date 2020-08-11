@@ -37,21 +37,22 @@
 // Cesium ionを使うためのアクセスキー
 Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI2YmRkZDc4NS1hYzJjLTQ0YjUtYWQ2ZS0zYWJhZmUzMWY0NjUiLCJpZCI6MjczNzQsInNjb3BlcyI6WyJhc3IiLCJnYyJdLCJpYXQiOjE1ODkzODcyNjR9.t9J2zN4Cl-luHIFGZexkBknOGS40oRT75sa60UMQcLM";
 
+
+// 背景地図に国土地理院地図を利用
+var viewer = new Cesium.Viewer('cesiumContainer', {
+  imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+    url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
+    credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
+  }),
+  baseLayerPicker: false,
+  geocoder: false,
+  homeButton: false
+});
 /*  
-  // 背景地図に国土地理院地図を利用
-  var viewer = new Cesium.Viewer('cesiumContainer', {
-    imageryProvider: new Cesium.OpenStreetMapImageryProvider({
-      url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
-      credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
-    }),
-    baseLayerPicker: false,
-    geocoder: false,
-    homeButton: false
-  });
-*/
   // Cesiumデフォルトの背景地図を使いたいなら以下。
   var viewer = new Cesium.Viewer("cesiumContainer");
-
+*/
+  
 /*  
   // Cesium ionでなく、ローカルにある3D モデルを参照しようとした。Cromeは自分のファイルを
   // 読みいけないようにセキュリティがかかっていた。対策はできるようだが、ブラウザによって
@@ -66,7 +67,7 @@ Cesium.Ion.defaultAccessToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 // 3Dタイルの設定。都庁周辺をOSMから抽出したデータである。
 var tileset = viewer.scene.primitives.add(
   new Cesium.Cesium3DTileset({
-    url: Cesium.IonResource.fromAssetId(116046)
+    url: Cesium.IonResource.fromAssetId(99522)
     //もし3Dオブジェクトの緯度経度を指定して配置したい場合は以下で指定する
     //,modelMatrix: Cesium.Transforms.eastNorthUpToFixedFrame(
     //  Cesium.Cartesian3.fromDegrees(139.691703, 35.689513, 0.0)
