@@ -44,9 +44,9 @@ var viewer = new Cesium.Viewer('cesiumContainer', {
     url: 'https://cyberjapandata.gsi.go.jp/xyz/std/',
     credit: new Cesium.Credit('地理院タイル', '', 'https://maps.gsi.go.jp/development/ichiran.html')
   }),
-  baseLayerPicker: false,
-  geocoder: false,
-  homeButton: false
+  baseLayerPicker: false,  // 背景地図の切替ボタン
+  geocoder: false,         // 検索ボタン
+  homeButton: false        // ホームボタン
 });
 /*  
   // Cesiumデフォルトの背景地図を使いたいなら以下。
